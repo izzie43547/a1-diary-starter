@@ -23,9 +23,14 @@ def main():
     notebook_path = None
     command_parser = CommandParser()
 
+    if sys.stdin.isatty():
+        prompt = "> "
+    else:
+        prompt = ""
+
     while True:
         try:
-            user_input = input("> ").strip()
+            user_input = input(prompt).strip()
             if not user_input:
                 continue
 

@@ -47,9 +47,10 @@ class CommandParser:
             if not notebook_path.parent.exists():
                 return None, None, "ERROR"
 
-            username = input("username: ")
-            password = input("password: ")
-            bio = input("bio: ")
+            # Get user input without printing prompts
+            username = input()
+            password = input()
+            bio = input()
 
             notebook = Notebook(username, password, bio)
             notebook.save(notebook_path)
@@ -105,8 +106,9 @@ class CommandParser:
             return None, None, "ERROR"
 
         try:
-            username = input("username: ")
-            password = input("password: ")
+            # Get user input without printing prompts
+            username = input()
+            password = input()
 
             # Create notebook with temporary values
             notebook = Notebook(username, password, "")

@@ -108,13 +108,17 @@ class CommandParser:
             username = input("username: ")
             password = input("password: ")
 
-            notebook = Notebook()
+            # Create notebook with temporary values
+            notebook = Notebook(username, password, "")
+            # Load the actual values from file
             notebook.load(file_path)
+            
             if notebook.username == username and notebook.password == password:
                 return notebook, file_path, f"Notebook loaded.\n{notebook.username}\n{notebook.bio}"
             else:
                 return None, None, "ERROR"
-        except Exception:
+        except Exception as e:
+            print(f"Error during open: {e}")
             return None, None, "ERROR"
 
     def edit_notebook(self, notebook: Notebook, notebook_path: pathlib.Path, args: List[str]) -> Optional[str]:

@@ -2,76 +2,77 @@
 
 # Replace the following placeholders with your information.
 
-# LEXI ARBALLLO
+# LEXI ARBALLO
 # LARBALLO@UCI.EDU
 # 67207873
 
-import os
+# a1.py
 
-def processCommand(command):
-    parts = command.split(maxsplit=1)
+import shlex
+import pathlib
+from notebook import Notebook
+from command_parser import CommandParser
+import sys
 
-    if len(parts) < 2:
-        print('ERROR')
-        return
+def main():
+    """
+    The main entry point for the diary program.
+    It handles user input, parses commands, and interacts with the CommandParser and Notebook.
+    """
+    notebook = None
+    notebook_path = None
+    command_parser = CommandParser()
 
-    action, argument = parts
-
-    if action == 'R':
-        handleReadCommand(argument)
-    elif action == 'C':
-        handleCreateCommand(argument)
-    elif action == 'D':
-        handleDeleteCommand(argument)
-    else:
-        print('ERROR')
-
-def handleReadCommand(filePath):
-    if not os.path.exists(filePath) or not filePath.endswith('.dsu'):
-        print('ERROR')
-    else:
-        try:
-            with open(filePath, 'r', encoding='utf-8') as file:
-                content = file.read().strip()
-                if content:
-                    print(content)
-                else:
-                    print('EMPTY')
-        except Exception:
-            print('ERROR')
-
-def handleCreateCommand(arguments):
-    args = arguments.split('-n', maxsplit=1)
-    if len(args) != 2:
-        print('ERROR')
-        return
-
-    dirPath, fileName = args[0].strip(), args[1].strip()
-    filePath = os.path.join(dirPath, f"{fileName}.dsu")
-
-    try:
-        with open(filePath, 'w', encoding='utf-8') as file:
-            pass
-        print(filePath)
-    except Exception:
-        print('ERROR')
-
-def handleDeleteCommand(filePath):
-    if not os.path.exists(filePath):
-        print('ERROR')
-    else:
-        try:
-            os.remove(filePath)
-            print(f"{filePath} DELETED")
-        except Exception:
-            print('ERROR')
-
-if __name__ == '__main__':
     while True:
         try:
-            command = input().strip()
-            if command.upper() == 'Q':
+            user_input = input("> ").strip()
+            if not user_input:
+                continue
+
+            command_parts = shlex.split(user_input)
+            if not command_parts:
+                continue
+
+            command = command_parts[0].upper()
+            args = command_parts[1:]
+
+            if command == 'Q':
                 break
-            processCommand(command)
+            elif command == 'C':
+                notebook, notebook_path, output = command_parser.create_notebook(args)
+                if output:
+                    print(output)
+            elif command == 'D':
+                output = command_parser.delete_notebook(args)
+                if output:
+                    print(output)
+            elif command == 'O':
+                notebook, notebook_path, output = command_parser.open_notebook(args)
+                if output:
+                    print(output)
+            elif command == 'E':
+                if notebook and notebook_path:
+                    output = command_parser.edit_notebook(notebook, notebook_path, args)
+                    if output:
+                        print(output)
+                else:
+                    print("ERROR")
+            elif command == 'P':
+                if notebook:
+                    output = command_parser.print_notebook(notebook, args)
+                    if output:
+                        print(output)
+                else:
+                    print("ERROR")
+            else:
+                print("ERROR")
+
         except EOFError:
             break
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            print("ERROR")
+
+if __name__ == "__main__":
+    main()

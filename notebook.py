@@ -175,6 +175,7 @@ class Notebook:
                 self.username = obj['username']
                 self.password = obj['password']
                 self.bio = obj['bio']
+                self._diaries = []
                 for diary_obj in obj['_diaries']:
                     diary = Diary(diary_obj['entry'], diary_obj['timestamp'])
                     self._diaries.append(diary)

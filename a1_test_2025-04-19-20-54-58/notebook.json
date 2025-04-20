@@ -1,0 +1,15 @@
+{
+    "username": "mark",
+    "password": "securepassword",
+    "bio": "new-bio",
+    "_diaries": [
+        {
+            "entry": "My first diary entry",
+            "timestamp": "1745121298.4665058"
+        },
+        {
+            "entry": "My second diary entry",
+            "timestamp": "1745121298.4665058"
+        }
+    ]
+}
